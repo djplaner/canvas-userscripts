@@ -1,0 +1,46 @@
+{
+  "devDependencies": {
+    "eslint": "^8.8.0",
+    "userscript-builder": "^0.4.0"
+  },
+  "name": "canvas-userscripts",
+  "author": "David Jones",
+  "license": "MIT",
+  "description": "Collection of userscripts to provide missing features for supporting Canvas course sites",
+  "version": "0.0.0",
+  "userscript": {
+    "entry": "./src/index.js",
+    "dev": "./dist",
+    "release": "./release",
+    "fileName": "canvas-userscripts",
+    "meta": {
+      "name": "canvas-userscripts",
+      "namespace": "https://github.com/djplaner/",
+      "homepage": "https://github.com/djplaner/canvas-userscripts#readme",
+      "match": "https://*/courses/*",
+      "grant": "none",
+      "require": []
+    }
+  },
+  "dependencies": {
+    "minimist": "^1.2.5"
+  },
+  "scripts": {
+    "build": "userscript-builder --mode dev",
+    "release:bugfix": "userscript-builder --mode bugfix",
+    "release:minor": "userscript-builder --mode minor",
+    "release:major": "userscript-builder --mode major"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/djplaner/canvas-userscripts.git"
+  },
+  "keywords": [
+    "canvas",
+    "userscript"
+  ],
+  "bugs": {
+    "url": "https://github.com/djplaner/canvas-userscripts/issues"
+  },
+  "homepage": "https://github.com/djplaner/canvas-userscripts#readme"
+}
