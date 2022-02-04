@@ -6,7 +6,7 @@
 import { Controller } from './controller.js';
 
 
-(function () {
+function canvasUserscriptsLaunch() {
 
     window.addEventListener('load', function () {
         // getting very kludgy here, haven't got a good solution...yet #14
@@ -17,4 +17,5 @@ import { Controller } from './controller.js';
             }, 2000);
     });
 }
-);
+
+canvasUserscriptsLaunch();

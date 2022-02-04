@@ -1,17 +1,3 @@
-// ==UserScript==
-// @name         canvas-userscripts
-// @namespace    https://github.com/djplaner/
-// @version      0.0.0
-// @description  Collection of userscripts to provide missing features for supporting Canvas course sites
-// @author       David Jones
-// @match        https://*/courses/*
-// @grant        none
-// @source       https://github.com/djplaner/canvas-userscripts.git
-// @license      MIT
-// @homepage     https://github.com/djplaner/canvas-userscripts#readme
-// ==/UserScript==
-
-// src/tweaks/addDeleteAllPagesOption.js
 /**
  * deleteAllPagesOptions.js
  * Add a "select all" checkbox to a Canvas pages page
@@ -21,7 +7,7 @@
  * - scroll back to the top so the user can click the trash button
  */
 
-class addDeleteAllPagesOption {
+export default class addDeleteAllPagesOption {
     constructor(controller) {
         this.controller = controller;
         console.log('CANVAS-USERSCRIPTS: addDeleteAllPagesOption');
@@ -79,8 +65,12 @@ class addDeleteAllPagesOption {
         const pause = 260;
         console.log('CANVAS-USERSCRIPTS: handleClick: scroll down');
 
+        let promise = new Promise((resolve, reject) => {
+
+
         /// start the interval with the pause in between executions
-        var interval = setInterval(function () {
+        interval = setInterval(
+            (this.addSelectAll) => function(callback) {
             /// denife values, not necessary but easyier to read
             let scrolled = window.pageYOffset;
             let scroll_size = document.body.scrollHeight;
@@ -112,7 +102,7 @@ class addDeleteAllPagesOption {
 //                document.querySelector('button.delete_pages').disabled = false;
 
                 // add the delete all checkbox again, to allow removal
-                this.addSelectAll()
+                callback();
 
             } else {
                 console.log(` ---- scrolling down by ${scrollDistance} pausing ${pause}`);
@@ -122,80 +112,3 @@ class addDeleteAllPagesOption {
         }, pause);
     }
 }
-
-// src/controller.js
-/**
- * Controller.js
- * - detect the type of page we're one and launch the appropriate userscripts
- * - the controller knows when to launch, the models/views know how to update
- */
-
-
-
-class Controller {
-    constructor() {
-
-        if (this.onPages()) {
-            this.deleteAllPages = new addDeleteAllPagesOption(this);
-        }
-
-        // kludge check
-        this.render();
-    }
-
-    render() {
-        console.log('CANVAS-USERSCRIPTS: rendering');
-    }
-
-    /**
-     * Harness to handle clicks from userscripts. Receives the type/name
-     * of the userscript as the eventGiven the name of a userscript event 
-     * @param {String} type 
-     */
-    handleClick(type, option = null) {
-        console.log('CANVAS-USERSCRIPTS: handleClick: ' + type);
-
-        switch (type) {
-            case 'deleteAllPages':
-                if (Object.prototype.hasOwnProperty.call(this, 'deleteAllPages')) {
-                    this.deleteAllPages.handleClick(option);
-                } else {
-                    console.error('CANVAS-USERSCRIPTS: handleClick: no deleteAllPages object');
-                }
-                break;
-            default:
-                console.error('CANVAS-USERSCRIPTS: handleClick: unknown type: ' + type);
-        }
-    }
-
-    /** detect if we're on the Canvas pages page */
-    onPages() {
-        //return window.location.href.indexOf('/pages') > -1;
-        return window.location.href.match('/courses/[0-9]+/pages');
-    }
-
- 
-}
-
-// src/index.js
-/**
- * canvas-userscripts - collection of kludges to upgrade Canvas LMS functionality
- * - main entry point
- * - waits for page load and then launches the controller
- */
-
-
-
-function canvasUserscriptsLaunch() {
-
-    window.addEventListener('load', function () {
-        // getting very kludgy here, haven't got a good solution...yet #14
-        // - module content is dynamically loaded, wait (dumbly) for it to finish
-        this.setTimeout(
-            () => {
-                let controller = new Controller();
-            }, 2000);
-    });
-}
-
-canvasUserscriptsLaunch();
