@@ -21,6 +21,8 @@
  * - scroll back to the top so the user can click the trash button
  */
 
+var ATTEMPT=5;
+
 class addDeleteAllPagesOption {
     constructor(controller) {
         this.controller = controller;
@@ -55,7 +57,7 @@ class addDeleteAllPagesOption {
         // create checkbox#userscript-select-all-checkbox
         let checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
-//        checkbox.classList.add("select-page-check-box")
+        //        checkbox.classList.add("select-page-check-box")
         checkbox.id = "userscript-select-all-checkbox";
         checkbox.ariaLabel = "Select all pages";
         checkbox.title = "Toggle all pages selection (for deletion)";
@@ -75,53 +77,53 @@ class addDeleteAllPagesOption {
 
         console.log('CANVAS-USERSCRIPTS: handleClick: at the bottom');
 
-        const scrollDistance = 100;
-        const pause = 260;
         console.log('CANVAS-USERSCRIPTS: handleClick: scroll down');
+        ATTEMPT = 5;
 
-        /// start the interval with the pause in between executions
-        var interval = setInterval(function () {
-            /// denife values, not necessary but easyier to read
-            let scrolled = window.pageYOffset;
-            let scroll_size = document.body.scrollHeight;
-            let scroll_remaining = scroll_size - scrolled;
+        let interval = setInterval(function() {
+            console.log(`Interval has happened ${ATTEMPT}`);
+            ATTEMPT-=1;
 
-            /// check if scrolling is necessary
-            console.log(`scroll_remaining: ${parseInt(scroll_remaining)} window.innerHeight: ${window.innerHeight}`);
-            // necessary kludge - somehow getting 620.333
-            if ( parseInt(scroll_remaining) <= window.innerHeight) {
-                console.log(' ---- clearing interval - at the end of page?')
-                clearInterval(interval);
-
-
-                // select the checkbox.select-page-checkbox for all the pages
-                let checkboxes = document.querySelectorAll('.select-page-checkbox');
-                console.log(`found {${checkboxes.length}} checkboxes`);
-
-                // check all the checkboxes
-                for (let i = 0; i < checkboxes.length; i++) {
-                    //checkboxes[i].checked = true;
-                    // click on the checkbox
-                    checkboxes[i].click();
-                }
-
-                /// scroll back to top
-//                window.scrollTo(0, 0);
-                document.querySelector('div.ic-app-crumbs').scrollIntoView();
-                // re-enable the button.delete_pages button
-//                document.querySelector('button.delete_pages').disabled = false;
-
-                // add the delete all checkbox again, to allow removal
-                this.addSelectAll()
-
+            let loading = document.querySelector('div.loading');
+            if ( loading && loading.classList.contains('loading-more')) {
+                loading.scrollIntoView();
             } else {
-                console.log(` ---- scrolling down by ${scrollDistance} pausing ${pause}`);
-                window.scrollBy(0, scrollDistance);
-            };
+                clearInterval(interval);
+                console.log("Interval has ended - no more to load");
+                selectAll();
+            }
+            if (ATTEMPT <= 0) {
+                clearInterval(interval);
+                console.log("Interval has ended");
+                selectAll();
+            }
 
-        }, pause);
+        }, 1000);
     }
+
+
 }
+
+    function selectAll() {
+        console.log("---------------- select all");
+        // select the checkbox.select-page-checkbox for all the pages
+        let checkboxes = document.querySelectorAll('.select-page-checkbox');
+        console.log(`found {${checkboxes.length}} checkboxes`);
+
+        // check all the checkboxes
+        for (let i = 0; i < checkboxes.length; i++) {
+            //checkboxes[i].checked = true;
+            // click on the checkbox
+            checkboxes[i].click();
+        }
+
+        /// scroll back to top
+        //                window.scrollTo(0, 0);
+        document.querySelector('div.ic-app-crumbs').scrollIntoView();
+        // re-enable the button.delete_pages button
+        //                document.querySelector('button.delete_pages').disabled = false;
+        // add the delete all checkbox again, to allow removal
+    }
 
 // src/controller.js
 /**
