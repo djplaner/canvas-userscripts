@@ -9,7 +9,7 @@ First userscript (beta version) is up and running. More to come.
 ## Installation and use
 
 1. Install a userscript manager (e.g. Tampermonkey)
-2. Install [the canvas-userscripts userscript](./dist/canvas-userscripts.user.js)
+2. Install [the canvas-userscripts userscript](https://github.com/djplaner/canvas-userscripts/raw/main/dist/canvas-userscripts.user.js)
 
 ## Available UserScripts
 
